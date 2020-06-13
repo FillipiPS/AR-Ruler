@@ -11,8 +11,9 @@ import SceneKit
 import ARKit
 
 class ViewController: UIViewController, ARSCNViewDelegate {
-
+    
     @IBOutlet var sceneView: ARSCNView!
+    var dotNodes = [SCNNode]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,7 +29,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Create a session configuration
         let configuration = ARWorldTrackingConfiguration()
-
+        
         // Run the view's session
         sceneView.session.run(configuration)
     }
@@ -65,6 +66,24 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         )
         
         sceneView.scene.rootNode.addChildNode(dotNode)
+        
+        dotNodes.append(dotNode)
+        if dotNodes.count >= 2 {
+            calculate()
+        }
     }
-
+    
+    func calculate() {
+        let start = dotNodes.first!
+        let end = dotNodes.last!
+        
+        let distance = sqrt(
+            powf(end.position.x - start.position.x, 2) +
+            powf(end.position.y - start.position.y, 2) +
+            powf(end.position.z - start.position.z, 2)
+        )
+        
+        print(distance)
+    }
+    
 }
